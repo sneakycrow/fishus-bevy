@@ -9,7 +9,7 @@ on:
       - prereleased
       - released
   push:
-    branches: [main, add-release-ci]
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:

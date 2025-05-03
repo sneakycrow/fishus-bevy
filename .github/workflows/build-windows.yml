@@ -1,6 +1,13 @@
 name: windows build
 
+permissions:
+  contents: write
+
 on:
+  release:
+    types:
+      - prereleased
+      - released
   push:
     branches: [main]
   pull_request:
