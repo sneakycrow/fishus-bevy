@@ -4,11 +4,9 @@ set dotenv-load := true
 default:
     @just --list
 
+alias run := dev
 dev:
     cargo run
-
-run:
-    cargo run --release
 
 build:
     cargo build --release

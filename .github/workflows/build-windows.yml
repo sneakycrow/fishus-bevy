@@ -1,0 +1,25 @@
+name: windows build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup toolchain install nightly --profile minimal
+      - uses: Swatinem/rust-cache@v2
+      - uses: extractions/setup-just@v2
+      - name: build
+        run: just build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: |
+            target/release/fishus-bevy.exe
+          retention-days: ${{ github.event_name == 'pull_request' && 1 || 90 }}
