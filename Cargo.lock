@@ -1955,7 +1955,7 @@ dependencies = [
 
 [[package]]
 name = "fishus-bevy"
-version = "2025.5.0"
+version = "2025.5.1"
 dependencies = [
  "bevy",
  "log",
