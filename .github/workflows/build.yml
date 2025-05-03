@@ -21,3 +21,4 @@ jobs:
           name: build-artifact
           path: |
             target/release/fishus-bevy
+          retention-days: ${{ github.event_name == 'pull_request' && 1 || 90 }}
