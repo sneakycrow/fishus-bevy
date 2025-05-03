@@ -17,8 +17,8 @@ jobs:
       - uses: extractions/setup-just@v2
       - name: build
         run: just build
-      - run: ls -la target
-      - run: ls -la target/release
+      - run: dir target
+      - run: dir target\release
       - uses: actions/upload-artifact@v4
         with:
           name: windows-build
