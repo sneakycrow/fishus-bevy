@@ -1,6 +1,10 @@
 name: macos build
 
 on:
+  release:
+    types:
+      - prereleased
+      - released
   push:
     branches: [main, add-release-ci]
   pull_request:
