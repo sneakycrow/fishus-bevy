@@ -30,9 +30,11 @@ jobs:
           path: |
             target/release/fishus-bevy.exe
           retention-days: ${{ github.event_name == 'pull_request' && 1 || 90 }}
+      - run: |
+          mv target/release/fishus-bevy.exe target/release/fishus-bevy-windows.exe
       - uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'
         with:
           files: |
-            target/release/fishus-bevy.exe
+            target/release/fishus-bevy-windows.exe
             LICENSE
