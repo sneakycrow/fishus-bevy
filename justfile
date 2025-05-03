@@ -4,14 +4,12 @@ set dotenv-load := true
 default:
     @just --list
 
+alias run := dev
 dev:
     cargo run
 
-run:
-    cargo run --release
-
 build:
-    cargo build --release
+    cargo build
 
 # Run full CI testing suite including tests, formatting, and clippy
 check: build fmt clippy test
