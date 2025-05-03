@@ -9,7 +9,7 @@ dev:
     cargo run
 
 build:
-    cargo build
+    cargo build --release
 
 # Run full CI testing suite including tests, formatting, and clippy
 check: build fmt clippy test
