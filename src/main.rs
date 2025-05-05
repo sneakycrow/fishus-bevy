@@ -1,42 +1,50 @@
 use bevy::prelude::*;
+use bevy_rapier3d::prelude::*;
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
-        .add_plugins(HelloPlugin)
+        .add_plugins(RapierPhysicsPlugin::<NoUserData>::default())
+        .add_plugins(RapierDebugRenderPlugin::default())
+        .add_systems(Startup, setup_graphics)
+        .add_systems(Startup, setup_physics)
+        .add_systems(Update, print_ball_altitude)
         .run();
 }
 
-#[derive(Component)]
-struct Person;
-
-#[derive(Component)]
-struct Name(String);
-
-/// Spawns people with names
-fn add_people(mut commands: Commands) {
-    commands.spawn((Person, Name("Zachary Corvidae".to_string())));
+fn setup_graphics(mut commands: Commands) {
+    // Add a camera so we can see the debug-render.
+    commands.spawn((
+        Camera3d::default(),
+        Transform::from_xyz(-3.0, 3.0, 10.0).looking_at(Vec3::ZERO, Vec3::Y),
+    ));
 }
 
-/// Timer for how often we greet
-#[derive(Resource)]
-struct GreetTimer(Timer);
+fn setup_physics(mut commands: Commands) {
+    /* Create the ground. */
+    commands
+        .spawn(Collider::cuboid(100.0, 0.1, 100.0))
+        .insert(Transform::from_xyz(0.0, -2.0, 0.0))
+        .insert(Restitution::coefficient(1.0))
+        .insert(Friction::coefficient(0.0));
 
-/// Says hello to all the person's
-fn greet_people(time: Res<Time>, mut timer: ResMut<GreetTimer>, query: Query<&Name, With<Person>>) {
-    if timer.0.tick(time.delta()).just_finished() {
-        for name in &query {
-            println!("Hello {}!", name.0);
-        }
-    }
+    /* Create the bouncing ball. */
+    commands
+        .spawn(RigidBody::Dynamic)
+        .insert(Collider::ball(0.25))
+        .insert(Restitution::coefficient(1.0))
+        .insert(Friction::coefficient(0.0))
+        .insert(Ccd::enabled())
+        .insert(Damping {
+            linear_damping: 0.0,
+            angular_damping: 0.0,
+        })
+        .insert(Transform::from_xyz(0.0, 1.0, 0.0))
+        .insert(Velocity::linear(Vec3::ZERO));
 }
 
-pub struct HelloPlugin;
-
-impl Plugin for HelloPlugin {
-    fn build(&self, app: &mut App) {
-        app.insert_resource(GreetTimer(Timer::from_seconds(2.0, TimerMode::Repeating)));
-        app.add_systems(Startup, add_people);
-        app.add_systems(Update, greet_people);
+fn print_ball_altitude(positions: Query<&Transform, With<RigidBody>>) {
+    for transform in positions.iter() {
+        println!("Ball altitude: {}", transform.translation.y);
     }
 }
