@@ -24,14 +24,23 @@ fn setup_physics(mut commands: Commands) {
     /* Create the ground. */
     commands
         .spawn(Collider::cuboid(100.0, 0.1, 100.0))
-        .insert(Transform::from_xyz(0.0, -2.0, 0.0));
+        .insert(Transform::from_xyz(0.0, -2.0, 0.0))
+        .insert(Restitution::coefficient(1.0))
+        .insert(Friction::coefficient(0.2));
 
     /* Create the bouncing ball. */
     commands
         .spawn(RigidBody::Dynamic)
         .insert(Collider::ball(0.5))
-        .insert(Restitution::coefficient(0.7))
-        .insert(Transform::from_xyz(0.0, 4.0, 0.0));
+        .insert(Restitution::coefficient(1.0))
+        .insert(Friction::coefficient(0.0))
+        .insert(Ccd::enabled())
+        .insert(Damping {
+            linear_damping: 0.5,
+            angular_damping: 0.0,
+        })
+        .insert(Transform::from_xyz(0.0, 3.0, 0.0))
+        .insert(Velocity::linear(Vec3::ZERO));
 }
 
 fn print_ball_altitude(positions: Query<&Transform, With<RigidBody>>) {
