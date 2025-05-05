@@ -26,20 +26,20 @@ fn setup_physics(mut commands: Commands) {
         .spawn(Collider::cuboid(100.0, 0.1, 100.0))
         .insert(Transform::from_xyz(0.0, -2.0, 0.0))
         .insert(Restitution::coefficient(1.0))
-        .insert(Friction::coefficient(0.2));
+        .insert(Friction::coefficient(0.0));
 
     /* Create the bouncing ball. */
     commands
         .spawn(RigidBody::Dynamic)
-        .insert(Collider::ball(0.5))
+        .insert(Collider::ball(0.25))
         .insert(Restitution::coefficient(1.0))
         .insert(Friction::coefficient(0.0))
         .insert(Ccd::enabled())
         .insert(Damping {
-            linear_damping: 0.5,
+            linear_damping: 0.0,
             angular_damping: 0.0,
         })
-        .insert(Transform::from_xyz(0.0, 3.0, 0.0))
+        .insert(Transform::from_xyz(0.0, 1.0, 0.0))
         .insert(Velocity::linear(Vec3::ZERO));
 }
 
