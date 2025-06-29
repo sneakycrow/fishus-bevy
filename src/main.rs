@@ -10,8 +10,12 @@ fn main() {
         ))
         .add_systems(Startup, setup_graphics)
         .add_systems(Startup, setup_physics)
+        .add_systems(Update, reset_ball_on_space)
         .run();
 }
+
+#[derive(Component)]
+struct BouncingBall;
 
 fn setup_graphics(mut commands: Commands) {
     commands.spawn((
@@ -58,5 +62,26 @@ fn setup_physics(
         .insert(Transform::from_xyz(0.0, 1.0, 0.0))
         .insert(LinearVelocity(Vec3::ZERO))
         .insert(Mesh3d(meshes.add(Sphere::new(0.25))))
-        .insert(MeshMaterial3d(materials.add(Color::srgb_u8(255, 124, 144))));
+        .insert(MeshMaterial3d(materials.add(Color::srgb_u8(255, 124, 144))))
+        .insert(BouncingBall);
+}
+
+fn reset_ball_on_space(
+    keyboard_input: Res<ButtonInput<KeyCode>>,
+    mut ball_query: Query<
+        (&mut Transform, &mut LinearVelocity, &mut AngularVelocity),
+        With<BouncingBall>,
+    >,
+) {
+    if keyboard_input.just_pressed(KeyCode::Space) {
+        for (mut transform, mut linear_velocity, mut angular_velocity) in ball_query.iter_mut() {
+            // Reset position to starting position
+            transform.translation = Vec3::new(0.0, 1.0, 0.0);
+            // Reset rotation to identity
+            transform.rotation = Quat::IDENTITY;
+            // Stop all movement
+            linear_velocity.0 = Vec3::ZERO;
+            angular_velocity.0 = Vec3::ZERO;
+        }
+    }
 }
