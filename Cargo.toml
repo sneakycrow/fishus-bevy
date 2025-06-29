@@ -11,10 +11,6 @@ log = { version = "*", features = [
     "release_max_level_warn",
 ] }
 
-[patch.crates-io]
-windows = "0.58.0"
-windows-core = "0.58.0"
-
 # Enable a small amount of optimization in the dev profile.
 [profile.dev]
 opt-level = 1
